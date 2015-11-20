@@ -8,11 +8,16 @@ jdk:
 services:
 - docker
 
-script:
-- gradle clean test
 
+
+# run unit tests
+script:
+- ./gradlew clean test
+
+# build Docker images and push to Docker Hub
 after_success:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 - docker build -f ./Dockerfile_middletier -t johannesw/netflix-rss-middletier .
-- docker build -f ./Dockerfile_edge -t johannesw/netflix-rss-edge .
 - docker push johannesw/netflix-rss-middletier
+- docker build -f ./Dockerfile_edge -t johannesw/netflix-rss-edge .
+- docker push johannesw/netflix-rss-edge
