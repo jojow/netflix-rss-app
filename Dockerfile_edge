@@ -3,7 +3,7 @@ FROM java:7
 MAINTAINER Johannes Wettinger
 # based on github.com/hora-prediction/recipes-rss-kube-docker
 
-ADD rss-edge/build/libs/rss-edge-0.1.0-SNAPSHOT.jar /opt/netflix-rss/rss-edge/build/libs/rss-edge-0.1.0-SNAPSHOT.jar
+ADD rss-edge/build/libs/rss-edge-0.1.0-SNAPSHOT.jar /opt/netflix-rss/rss-edge-0.1.0-SNAPSHOT.jar
 WORKDIR /opt/netflix-rss
 
 #RUN ./gradlew clean test
