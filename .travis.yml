@@ -1,0 +1,15 @@
+sudo: required
+
+language: java
+
+services:
+- docker
+
+script:
+- gradle clean test
+
+after_success:
+- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- docker build -f ./Dockerfile_middletier -t johannesw/netflix-rss-middletier .
+- docker build -f ./Dockerfile_edge -t johannesw/netflix-rss-edge .
+- docker push johannesw/netflix-rss-middletier
