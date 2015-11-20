@@ -10,9 +10,10 @@ services:
 
 
 
-# run unit tests
+# run unit tests and build JARs
 script:
 - ./gradlew clean test
+- ./gradlew clean build
 
 # build Docker images and push to Docker Hub
 after_success:

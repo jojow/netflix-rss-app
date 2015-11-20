@@ -3,20 +3,20 @@ FROM java:7
 MAINTAINER Johannes Wettinger
 # based on github.com/hora-prediction/recipes-rss-kube-docker
 
-ADD . /opt/netflix-rss/
+ADD rss-middletier/build/libs/rss-middletier-0.1.0-SNAPSHOT.jar /opt/netflix-rss/rss-middletier/build/libs/rss-middletier-0.1.0-SNAPSHOT.jar
 WORKDIR /opt/netflix-rss
 
 #RUN ./gradlew clean test
-
-RUN ./gradlew clean build
+#RUN ./gradlew clean build
 
 EXPOSE 9191
 
-CMD [ "java", "-jar", "rss-middletier/build/libs/rss-middletier-0.1.0-SNAPSHOT.jar" ]
+CMD [ "java", "-jar", "rss-middletier-0.1.0-SNAPSHOT.jar" ]
 
 
 
 #
+# ./gradlew clean build
 # docker build -f ./Dockerfile_middletier -t netflix-rss-middletier .
 # docker run -d -p 9191:9191 netflix-rss-middletier
 #
