@@ -1,6 +1,8 @@
 RSS Recipes
 ===========
 
+[![Build Status](https://travis-ci.org/jojow/netflix-rss-app.svg)](https://travis-ci.org/jojow/netflix-rss-app)
+
 RSS is a Netflix Recipes application demonstrating how Netflix Open Source components can be tied together.
 
 This is a modified version of the RSS Recipes to make it suitable for deploying on [Kubernetes](http://kubernetes.io/).
