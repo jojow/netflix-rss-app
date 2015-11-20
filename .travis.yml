@@ -18,7 +18,7 @@ script:
 # build Docker images and push to Docker Hub
 after_success:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- docker build -f ./Dockerfile_middletier -t johannesw/netflix-rss-middletier .
-- docker push johannesw/netflix-rss-middletier
-- docker build -f ./Dockerfile_edge -t johannesw/netflix-rss-edge .
-- docker push johannesw/netflix-rss-edge
+- docker build -f ./Dockerfile_middletier -t "$RSS_MIDDLETIER_IMAGE" .
+- docker push "$RSS_MIDDLETIER_IMAGE"
+- docker build -f ./Dockerfile_edge -t "$RSS_EDGE_IMAGE" .
+- docker push "$RSS_EDGE_IMAGE"
