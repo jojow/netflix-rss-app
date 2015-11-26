@@ -21,6 +21,8 @@ else
   #exit 1
 fi
 
-docker-compose kill
+docker-compose stop
+docker-compose rm -f
+#docker-compose kill
 
 echo "true" > $TEST_RESULT
