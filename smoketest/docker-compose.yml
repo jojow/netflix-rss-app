@@ -11,13 +11,14 @@ middletier:
   links:
    - cassandra
 cassandra:
-  image: cassandra:2
+  image: cassandra:2 # 2.1, 2.1.7
   ports:
   - "9042:9042" # cql
-  - "9160:9160" # thrift
+  - "9160:9160" # thrift rpc
   environment:
-    MAX_HEAP_SIZE: 512M
-    HEAP_NEWSIZE: 100M
+    CASSANDRA_START_RPC: "true"
+    #MAX_HEAP_SIZE: 512M
+    #HEAP_NEWSIZE: 100M
 
 
 
@@ -28,5 +29,6 @@ cassandra:
 # export RSS_EDGE_TAG=latest
 # docker-compose -f smoketest/docker-compose.yml up -d
 # docker-compose -f smoketest/docker-compose.yml run --rm cassandra sh -c "cqlsh -e \"$(cat smoketest/create.cql)\" cassandra 9042"
+# docker-compose -f smoketest/docker-compose.yml logs
 # docker-compose -f smoketest/docker-compose.yml kill
 #
