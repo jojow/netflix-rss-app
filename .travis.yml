@@ -10,12 +10,22 @@ services:
 
 
 
+env:
+  DOCKER_COMPOSE_VERSION: 1.5.1
+
+before_install:
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
+
+
+
 before_script:
 # determine tag for Docker images based on current commit
 - echo $(if [ -n "$TRAVIS_TAG" ]; then echo $TRAVIS_TAG;elif [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest";else echo $TRAVIS_BRANCH;fi) > tag
 
 script:
-- docker-compose -v
 # run unit tests
 - ./gradlew clean test
 # build JARs
@@ -25,7 +35,8 @@ script:
 - 'docker build -f Dockerfile_edge -t "$RSS_EDGE_IMAGE:$(cat tag)" .'
 # run integration/smoke test
 - RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml up
-- sleep 60 && RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml run --rm cassandra sh -c "cqlsh -e \"$(cat smoketest/create.cql)\" cassandra 9042"
+- sleep 60
+- RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml run --rm cassandra sh -c "cqlsh -e \"$(cat smoketest/create.cql)\" cassandra 9042"
 - '[[ 200 -eq $(curl --write-out %{http_code} --silent --output /dev/null http://localhost:9090/jsp/rss.jsp) ]]'
 - RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml kill
 # push Docker images to Docker Hub
