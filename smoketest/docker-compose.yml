@@ -1,0 +1,32 @@
+edge:
+  image: ${RSS_EDGE_IMAGE}:${RSS_EDGE_TAG}
+  ports:
+   - "9090:9090"
+  links:
+   - middletier
+middletier:
+  image: ${RSS_MIDDLETIER_IMAGE}:${RSS_MIDDLETIER_TAG}
+  ports:
+   - "9191:9191"
+  links:
+   - cassandra
+cassandra:
+  image: cassandra:2
+  ports:
+  - "9042:9042" # cql
+  - "9160:9160" # thrift
+  environment:
+    MAX_HEAP_SIZE: 512M
+    HEAP_NEWSIZE: 100M
+
+
+
+#
+# export RSS_MIDDLETIER_IMAGE=johannesw/netflix-rss-middletier
+# export RSS_MIDDLETIER_TAG=latest
+# export RSS_EDGE_IMAGE=johannesw/netflix-rss-edge
+# export RSS_EDGE_TAG=latest
+# docker-compose -f smoketest/docker-compose.yml up -d
+# docker-compose -f smoketest/docker-compose.yml run --rm cassandra sh -c "cqlsh -e \"$(cat smoketest/create.cql)\" cassandra 9042"
+# docker-compose -f smoketest/docker-compose.yml kill
+#

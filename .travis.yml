@@ -10,15 +10,27 @@ services:
 
 
 
-# run unit tests and build JARs
-script:
-- ./gradlew clean test
-- ./gradlew clean build
+before_script:
+# determine tag for Docker images based on current commit
+- echo $(if [ -n "$TRAVIS_TAG" ]; then echo $TRAVIS_TAG;elif [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest";else echo $TRAVIS_BRANCH;fi) > tag
 
-# build Docker images and push to Docker Hub
-after_success:
+script:
+# run unit tests
+- ./gradlew clean test
+# build JARs
+- ./gradlew clean build
+# build Docker images
+- docker build -f Dockerfile_middletier -t "$RSS_MIDDLETIER_IMAGE:$(cat tag)" .
+- docker build -f Dockerfile_edge -t "$RSS_EDGE_IMAGE:$(cat tag)" .
+# run integration/smoke test
+- RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml up
+- RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml run --rm cassandra sh -c "cqlsh -e \"$(cat smoketest/create.cql)\" cassandra 9042"
+- [[ 200 -eq $(curl --write-out %{http_code} --silent --output /dev/null http://localhost:9090/jsp/rss.jsp) ]]
+- RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml kill
+# push Docker images to Docker Hub
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- docker build -f ./Dockerfile_middletier -t "$RSS_MIDDLETIER_IMAGE" .
-- docker push "$RSS_MIDDLETIER_IMAGE"
-- docker build -f ./Dockerfile_edge -t "$RSS_EDGE_IMAGE" .
-- docker push "$RSS_EDGE_IMAGE"
+- docker push "$RSS_MIDDLETIER_IMAGE:$(cat tag)"
+- docker push "$RSS_EDGE_IMAGE:$(cat tag)"
+
+# send out notifications by e-mail, slack, ...
+# https://docs.travis-ci.com/user/notifications/
