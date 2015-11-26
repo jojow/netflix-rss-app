@@ -27,6 +27,7 @@ cassandra:
 # export RSS_MIDDLETIER_TAG=latest
 # export RSS_EDGE_IMAGE=johannesw/netflix-rss-edge
 # export RSS_EDGE_TAG=latest
+#
 # docker-compose -f smoketest/docker-compose.yml up -d
 # docker-compose -f smoketest/docker-compose.yml run --rm cassandra sh -c "cqlsh -e \"$(cat smoketest/create.cql)\" cassandra 9042"
 # docker-compose -f smoketest/docker-compose.yml logs

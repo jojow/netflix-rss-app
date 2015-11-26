@@ -20,17 +20,17 @@ script:
 # build JARs
 - ./gradlew clean build
 # build Docker images
-- docker build -f Dockerfile_middletier -t "$RSS_MIDDLETIER_IMAGE:$(cat tag)" .
-- docker build -f Dockerfile_edge -t "$RSS_EDGE_IMAGE:$(cat tag)" .
+- 'docker build -f Dockerfile_middletier -t "$RSS_MIDDLETIER_IMAGE:$(cat tag)" .'
+- 'docker build -f Dockerfile_edge -t "$RSS_EDGE_IMAGE:$(cat tag)" .'
 # run integration/smoke test
 - RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml up
 - RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml run --rm cassandra sh -c "cqlsh -e \"$(cat smoketest/create.cql)\" cassandra 9042"
-- [[ 200 -eq $(curl --write-out %{http_code} --silent --output /dev/null http://localhost:9090/jsp/rss.jsp) ]]
+- '[[ 200 -eq $(curl --write-out %{http_code} --silent --output /dev/null http://localhost:9090/jsp/rss.jsp) ]]'
 - RSS_EDGE_TAG=$(cat tag) RSS_MIDDLETIER_TAG=$(cat tag) docker-compose -f smoketest/docker-compose.yml kill
 # push Docker images to Docker Hub
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- docker push "$RSS_MIDDLETIER_IMAGE:$(cat tag)"
-- docker push "$RSS_EDGE_IMAGE:$(cat tag)"
+- 'docker push "$RSS_MIDDLETIER_IMAGE:$(cat tag)"'
+- 'docker push "$RSS_EDGE_IMAGE:$(cat tag)"'
 
 # send out notifications by e-mail, slack, ...
 # https://docs.travis-ci.com/user/notifications/
