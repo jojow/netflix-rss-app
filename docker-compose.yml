@@ -28,8 +28,8 @@ cassandra:
 # export RSS_EDGE_IMAGE=johannesw/netflix-rss-edge
 # export RSS_EDGE_TAG=latest
 #
-# docker-compose -f smoketest/docker-compose.yml up -d
-# docker-compose -f smoketest/docker-compose.yml run --rm cassandra sh -c "cqlsh -e \"$(cat smoketest/create.cql)\" cassandra 9042"
-# docker-compose -f smoketest/docker-compose.yml logs
-# docker-compose -f smoketest/docker-compose.yml kill
+# docker-compose up -d
+# docker-compose run --rm cassandra sh -c "cqlsh -e \"$(cat test/create-db.cql)\" cassandra 9042"
+# docker-compose logs
+# docker-compose kill
 #
