@@ -25,7 +25,7 @@ before_script:
 # determine tag for Docker images based on current commit
 - echo $(if [ -n "$TRAVIS_TAG" ]; then echo $TRAVIS_TAG;elif [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest";else echo $TRAVIS_BRANCH;fi) > tag
 # if commit tag is given on master branch, also push Docker images as 'latest'
-- if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_BRANCH" == "master" ]; then touch tag-latest; fi
+#- if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_BRANCH" == "master" ]; then touch tag-latest; fi
 
 script:
 # run unit tests
@@ -41,10 +41,10 @@ script:
 - '$(cat test-result) && docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"'
 - '$(cat test-result) && docker push "$RSS_MIDDLETIER_IMAGE:$(cat tag)"'
 - '$(cat test-result) && docker push "$RSS_EDGE_IMAGE:$(cat tag)"'
-- 'if [ -e tag-latest ]; then docker tag "$RSS_MIDDLETIER_IMAGE:$(cat tag)" "$RSS_MIDDLETIER_IMAGE:latest" fi'
-- 'if [ -e tag-latest ]; then docker tag "$RSS_EDGE_IMAGE:$(cat tag)" "$RSS_EDGE_IMAGE:latest" fi'
-- 'if [ -e tag-latest ]; then docker push "$RSS_MIDDLETIER_IMAGE:latest" fi'
-- 'if [ -e tag-latest ]; then docker push "$RSS_EDGE_IMAGE:latest" fi'
+#- 'if [ -e tag-latest ]; then docker tag "$RSS_MIDDLETIER_IMAGE:$(cat tag)" "$RSS_MIDDLETIER_IMAGE:latest" fi'
+#- 'if [ -e tag-latest ]; then docker tag "$RSS_EDGE_IMAGE:$(cat tag)" "$RSS_EDGE_IMAGE:latest" fi'
+#- 'if [ -e tag-latest ]; then docker push "$RSS_MIDDLETIER_IMAGE:latest" fi'
+#- 'if [ -e tag-latest ]; then docker push "$RSS_EDGE_IMAGE:latest" fi'
 
 # send out notifications by e-mail, slack, ...
 # https://docs.travis-ci.com/user/notifications/
