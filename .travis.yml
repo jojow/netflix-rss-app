@@ -36,7 +36,8 @@ script:
 # run integration test
 - ./test/smoketest.sh
 # push Docker images to Docker Hub
-- '$(cat test-result) && docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push "$RSS_MIDDLETIER_IMAGE:$(cat tag)" && docker push "$RSS_EDGE_IMAGE:$(cat tag)"'
+- '$(cat test-result) && docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"'
+- '$(cat test-result) && docker push "$RSS_MIDDLETIER_IMAGE:$(cat tag)" && docker push "$RSS_EDGE_IMAGE:$(cat tag)"'
 
 # send out notifications by e-mail, slack, ...
 # https://docs.travis-ci.com/user/notifications/
