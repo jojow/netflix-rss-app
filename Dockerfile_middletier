@@ -3,7 +3,9 @@ FROM java:7
 MAINTAINER Johannes Wettinger
 # based on github.com/hora-prediction/recipes-rss-kube-docker
 
-ADD rss-middletier/build/libs/rss-middletier-0.1.0-SNAPSHOT.jar /opt/netflix-rss/rss-middletier-0.1.0-SNAPSHOT.jar
+ENV RSS_VERSION current
+
+ADD rss-middletier/build/libs/rss-middletier-${RSS_VERSION}.jar /opt/netflix-rss/rss-middletier.jar
 
 WORKDIR /opt/netflix-rss
 
@@ -12,7 +14,7 @@ WORKDIR /opt/netflix-rss
 
 EXPOSE 9191
 
-CMD [ "java", "-jar", "rss-middletier-0.1.0-SNAPSHOT.jar" ]
+CMD [ "java", "-jar", "rss-middletier.jar" ]
 
 
 

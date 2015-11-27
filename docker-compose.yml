@@ -31,5 +31,5 @@ cassandra:
 # docker-compose up -d
 # docker-compose run --rm cassandra sh -c "cqlsh -e \"$(cat test/create-db.cql)\" cassandra 9042"
 # docker-compose logs
-# docker-compose kill
+# docker-compose kill && docker-compose rm -f
 #

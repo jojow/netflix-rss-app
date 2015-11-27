@@ -3,7 +3,9 @@ FROM java:7
 MAINTAINER Johannes Wettinger
 # based on github.com/hora-prediction/recipes-rss-kube-docker
 
-ADD rss-edge/build/libs/rss-edge-0.1.0-SNAPSHOT.jar /opt/netflix-rss/rss-edge-0.1.0-SNAPSHOT.jar
+ENV RSS_VERSION current
+
+ADD rss-edge/build/libs/rss-edge-${RSS_VERSION}.jar /opt/netflix-rss/rss-edge.jar
 
 WORKDIR /opt/netflix-rss
 
@@ -12,7 +14,7 @@ WORKDIR /opt/netflix-rss
 
 EXPOSE 9090
 
-CMD [ "java", "-jar", "rss-edge-0.1.0-SNAPSHOT.jar" ]
+CMD [ "java", "-jar", "rss-edge.jar" ]
 
 
 

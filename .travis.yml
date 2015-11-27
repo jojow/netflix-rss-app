@@ -23,12 +23,14 @@ before_install:
 before_script:
 # determine tag for Docker images based on current commit
 - echo $(if [ -n "$TRAVIS_TAG" ]; then echo $TRAVIS_TAG;elif [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest";else echo $TRAVIS_BRANCH;fi) > tag
+# set JAR version
+- sed -i -e "s/.*version.*/version=current/" gradle.properties
 
 script:
 # run unit tests
-- ./gradlew clean test
+- ./gradlew --quiet clean test
 # build JARs
-- ./gradlew clean build
+- ./gradlew --quiet clean build
 # build Docker images
 - 'docker build -f Dockerfile_middletier -t "$RSS_MIDDLETIER_IMAGE:$(cat tag)" .'
 - 'docker build -f Dockerfile_edge -t "$RSS_EDGE_IMAGE:$(cat tag)" .'
