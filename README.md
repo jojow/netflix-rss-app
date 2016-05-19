@@ -76,7 +76,7 @@ Environment variables:
 
 Artifacts:
 
-* ./rss-edge/build/libs/rss-middletier-current.jar
+* ./rss-middletier/build/libs/rss-middletier-current.jar
 * ./rss-edge/build/libs/rss-edge-current.jar
 
 ### Integration test
@@ -84,7 +84,6 @@ Artifacts:
 Commands:
 
     echo "built" > tag
-    pip install -U docker-compose
     sudo -E ./test/smoketest.sh
 
 Environment variables:
@@ -100,6 +99,8 @@ Commands:
     sudo docker pull "$RSS_EDGE_IMAGE:built"
     sudo docker tag -f "$RSS_MIDDLETIER_IMAGE:built" "$RSS_MIDDLETIER_IMAGE:latest"
     sudo docker tag -f "$RSS_EDGE_IMAGE:built" "$RSS_EDGE_IMAGE:latest"
+    sudo docker save -o ./rss-middletier-latest.docker.tar "$RSS_MIDDLETIER_IMAGE:latest"
+    sudo docker save -o ./rss-edge-latest.docker.tar "$RSS_EDGE_IMAGE:latest"
     sudo docker login -e "$DOCKER_EMAIL" -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
     sudo docker push "$RSS_MIDDLETIER_IMAGE:latest"
     sudo docker push "$RSS_EDGE_IMAGE:latest"
@@ -111,3 +112,8 @@ Environment variables:
 * DOCKER_EMAIL = ******
 * DOCKER_USERNAME = ******
 * DOCKER_PASSWORD = ******
+
+Artifacts:
+
+* ./rss-middletier-latest.docker.tar
+* ./rss-edge-latest.docker.tar
