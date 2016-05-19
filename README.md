@@ -35,3 +35,79 @@ If you would like to create your own instance of the pipeline, please follow the
 ## Travis settings
 
 ![Travis settings](/pipeline-docs/travis-settings.png)
+
+
+
+## Snap settings
+
+Alternatively to Travis CI, you can use Snap CI to build and run the pipeline.
+However, you need to configure the pipeline manually because Snap CI does not support pipeline as code (yet).
+Use the following settings:
+
+![Snap settings](/pipeline-docs/snap-settings.png)
+
+The stages need to be configured as follows:
+
+### Unit test
+
+Commands:
+
+    ./gradlew --quiet clean test
+
+### Build
+
+Commands:
+
+    sed -i -e "s/.*version.*/version=current/" gradle.properties
+    ./gradlew --quiet clean build
+    sudo docker build -f Dockerfile_middletier -t "$RSS_MIDDLETIER_IMAGE:built" .
+    sudo docker build -f Dockerfile_edge -t "$RSS_EDGE_IMAGE:built" .
+    sudo docker login -e "$DOCKER_EMAIL" -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    sudo docker push "$RSS_MIDDLETIER_IMAGE:built"
+    sudo docker push "$RSS_EDGE_IMAGE:built"
+
+Environment variables:
+
+* RSS_MIDDLETIER_IMAGE = johannesw/netflix-rss-middletier
+* RSS_EDGE_IMAGE = johannesw/netflix-rss-edge
+* DOCKER_EMAIL = ******
+* DOCKER_USERNAME = ******
+* DOCKER_PASSWORD = ******
+
+Artifacts:
+
+* ./rss-edge/build/libs/rss-middletier-current.jar
+* ./rss-edge/build/libs/rss-edge-current.jar
+
+### Integration test
+
+Commands:
+
+    echo "built" > tag
+    pip install -U docker-compose
+    sudo -E ./test/smoketest.sh
+
+Environment variables:
+
+* RSS_MIDDLETIER_IMAGE = johannesw/netflix-rss-middletier
+* RSS_EDGE_IMAGE = johannesw/netflix-rss-edge
+
+### Publish
+
+Commands:
+
+    sudo docker pull "$RSS_MIDDLETIER_IMAGE:built"
+    sudo docker pull "$RSS_EDGE_IMAGE:built"
+    sudo docker tag -f "$RSS_MIDDLETIER_IMAGE:built" "$RSS_MIDDLETIER_IMAGE:latest"
+    sudo docker tag -f "$RSS_EDGE_IMAGE:built" "$RSS_EDGE_IMAGE:latest"
+    sudo docker login -e "$DOCKER_EMAIL" -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    sudo docker push "$RSS_MIDDLETIER_IMAGE:latest"
+    sudo docker push "$RSS_EDGE_IMAGE:latest"
+
+Environment variables:
+
+* RSS_MIDDLETIER_IMAGE = johannesw/netflix-rss-middletier
+* RSS_EDGE_IMAGE = johannesw/netflix-rss-edge
+* DOCKER_EMAIL = ******
+* DOCKER_USERNAME = ******
+* DOCKER_PASSWORD = ******
